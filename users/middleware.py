@@ -37,10 +37,12 @@ class ADNTokenAuthMiddleware(object):
         if authorization_header:
             method, access_token = authorization_header.split(' ', 1)
             if access_token:
+                logger.info('found an access_token: %s', access_token)
                 adn_user = User.objects.filter(access_token=access_token)
                 if not adn_user.count():
                     token = self.fetch_user_data(access_token)
                     if token:
+                        logger.info('Creating a new user: %s', token)
                         adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], defaults={
                             'access_token': access_token,
                             'extra': {
