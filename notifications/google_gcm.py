@@ -5,7 +5,9 @@ from django.conf import settings
 
 
 def get_access_token():
+
     access_token = cache.get('access_token')
+
     if not access_token:
         resp = requests.post("https://accounts.google.com/o/oauth2/token", data=dict(
             client_id=settings.GCM_CLIENT_ID,
@@ -23,10 +25,10 @@ def get_access_token():
     return access_token
 
 
-def send_gcm_message(channelId, msg=''):
+def send_gcm_message_for_channel_id(channel_id, msg=''):
     access_token = get_access_token()
     payload = json.dumps(dict(
-        channelId=channelId,
+        channelId=channel_id,
         subchannelId=0,
         payload=msg,
     ))
@@ -35,3 +37,9 @@ def send_gcm_message(channelId, msg=''):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer %s' % (access_token)
     }, data=payload)
+
+    if resp.status_code not in (200, 204):
+        print "Couldn't send message: %s %s" % (resp.content, resp.status_code)
+
+def send_gcm_message_for_user(user, msg=''):
+    return send_gcm_message_for_channel_id(user.gcm_channel_id, msg)

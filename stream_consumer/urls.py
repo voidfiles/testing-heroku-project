@@ -7,7 +7,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'stream_consumer.views.home', name='home'),
-    # url(r'^stream_consumer/', include('stream_consumer.foo.urls')),
+    url(r'^notifications/', include('notifications.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
