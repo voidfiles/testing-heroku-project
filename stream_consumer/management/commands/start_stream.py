@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class NotifcationStreamListener(StreamListener):
 
     def on_fallback(self, data, meta):
-        print data
+        pass
 
 
 class Command(BaseCommand):
