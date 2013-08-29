@@ -21,6 +21,8 @@ class ADNTokenAuthMiddleware(object):
             token = json.loads(resp.content)
             if token.get('data') and token['data'].get('app', {}).get('client_id') == settings.ADN_CLIENT_ID:
                 return token['data']
+            else:
+                logger.error("Failed to find a user object: %s", token)
         else:
             logger.error("Failed to get a user token: %s", resp.content)
 
@@ -45,6 +47,8 @@ class ADNTokenAuthMiddleware(object):
                                 'raw_user_object': token['user']
                             }
                         })
+                    else:
+                        logger.error("Failed to create user from token: %s", token)
                 else:
                     adn_user = adn_user[0]
 
