@@ -19,8 +19,10 @@ class ADNTokenAuthMiddleware(object):
         resp = requests.get('https://alpha-api.app.net/stream/0/token', headers=headers)
         if resp.status_code == 200:
             token = json.loads(resp.content)
-            if token['data'].get('app', {}).get('client_id') == settings.ADN_CLIENT_ID:
+            if token.get('data') and token['data'].get('app', {}).get('client_id') == settings.ADN_CLIENT_ID:
                 return token['data']
+        else:
+            logger.error("Failed to get a user token: %s", resp.content)
 
         return None
 
@@ -36,13 +38,13 @@ class ADNTokenAuthMiddleware(object):
                 adn_user = User.objects.filter(access_token=access_token)
                 if not adn_user.count():
                     token = self.fetch_user_data(access_token)
-                    print 'Token: %s' % (token)
-                    adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], defaults={
-                        'access_token': access_token,
-                        'extra': {
-                            'raw_user_object': token['user']
-                        }
-                    })
+                    if token:
+                        adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], defaults={
+                            'access_token': access_token,
+                            'extra': {
+                                'raw_user_object': token['user']
+                            }
+                        })
                 else:
                     adn_user = adn_user[0]
 
