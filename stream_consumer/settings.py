@@ -1,5 +1,73 @@
 # Django settings for stream_consumer project.
 
+# heroku config:set ADN_CLIENT_ID=<Your Client ID>
+# heroku config:set ADN_CLIENT_SECRET=<Your Client Secret>
+import os
+
+ADN_CLIENT_ID = os.environ['ADN_CLIENT_ID']
+ADN_CLIENT_SECRET = os.environ['ADN_CLIENT_SECRET']
+ADN_APP_TOKEN = os.environ.get('ADN_APP_TOKEN')
+ADN_USER_ACCESS_TOKEN = os.environ.get('ADN_USER_ACCESS_TOKEN')
+
+ADN_FILTER_SCHEMA = {
+    'clauses': [
+        {
+            'field': u'/data/entities/mentions/*/id',
+            'object_type': u'post',
+            'operator': 'one_of',
+            'value': u'$authorized_userids'
+        }, {
+            'field': u'/data/follows_user/id',
+            'object_type': u'user_follow',
+            'operator': 'one_of',
+            'value': u'$authorized_userids'
+        }, {
+            'field': u'/data/post/user/id',
+            'object_type': u'star',
+            'operator': 'one_of',
+            'value': u'$authorized_userids'
+        }, {
+            'field': u'/data/repost_of/user/id',
+            'object_type': u'post',
+            'operator': 'one_of',
+            'value': u'$authorized_userids'
+        }, {
+            'field': u'/data/user/id',
+            'object_type': u'mute',
+            'operator': 'one_of',
+            'value': u'$authorized_userids'
+        }, {
+            'field': u'/meta/channel_type',
+            'object_type': u'message',
+            'operator': 'equals',
+            'value': u'net.app.core.pm'
+        }, {
+            'field': u'/meta/channel_type',
+            'object_type': u'message',
+            'operator': 'equals',
+            'value': u'net.app.core.broadcast'
+        }
+    ],
+    'match_policy': 'include_any',
+    'name': u'my_users_actions',
+}
+
+ADN_STREAM_SCHEMA = {
+    "object_types": [
+        "star",
+        "user_follow",
+        "message",
+        "channel",
+    ],
+    "type": "long_poll",
+    "key": "my_users_actions"
+}
+
+ADN_STREAM_FILTER_ID = os.environ.get('ADN_STREAM_FILTER_ID')
+
+
+
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -120,6 +188,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'stream_consumer',
     'gunicorn',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
@@ -145,7 +214,11 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'console':{
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        },
     },
     'loggers': {
         'django.request': {
@@ -153,6 +226,10 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'stream_consumer': {
+            'handlers': ['console'],
+            'propagate': True,
+        }
     }
 }
 
