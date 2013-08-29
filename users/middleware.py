@@ -22,9 +22,9 @@ class ADNTokenAuthMiddleware(object):
             if token.get('data') and token['data'].get('app', {}).get('client_id') == settings.ADN_CLIENT_ID:
                 return token['data']
             else:
-                logger.error("Failed to find a user object: %s", token)
+                print "Failed to find a user object: %s" % token
         else:
-            logger.error("Failed to get a user token: %s", resp.content)
+            print "Failed to get a user token: %s" % resp.content
 
         return None
 
@@ -37,12 +37,12 @@ class ADNTokenAuthMiddleware(object):
         if authorization_header:
             method, access_token = authorization_header.split(' ', 1)
             if access_token:
-                logger.info('found an access_token: %s', access_token)
+                print 'found an access_token: %s' % access_token
                 adn_user = User.objects.filter(access_token=access_token)
                 if not adn_user.count():
                     token = self.fetch_user_data(access_token)
                     if token:
-                        logger.info('Creating a new user: %s', token)
+                        print 'Creating a new user: %s' % token
                         adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], defaults={
                             'access_token': access_token,
                             'extra': {
@@ -50,7 +50,7 @@ class ADNTokenAuthMiddleware(object):
                             }
                         })
                     else:
-                        logger.error("Failed to create user from token: %s", token)
+                        print "Failed to create user from token: %s" % token
                 else:
                     adn_user = adn_user[0]
 
