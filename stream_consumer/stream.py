@@ -1,9 +1,6 @@
 import json
-import logging
 import requests
-
-
-from stream_consumer.adn import adn_api
+from threading import Thread
 
 
 class StreamListener(object):
