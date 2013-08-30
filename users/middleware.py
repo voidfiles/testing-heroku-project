@@ -43,13 +43,14 @@ class ADNTokenAuthMiddleware(object):
                 if not adn_user.count():
                     token = self.fetch_user_data(access_token)
                     if token:
-                        print 'Creating a new user: %s' % token
                         adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], access_token=access_token, defaults={
                             'access_token': access_token,
                             'extra': {
                                 'raw_user_object': token['user']
                             }
                         })
+                        if created:
+                            print 'Creating a new user: %s' % token
                     else:
                         print "Failed to create user from token: %s" % token
                 else:

@@ -41,5 +41,8 @@ def send_gcm_message_for_channel_id(channel_id, msg=''):
     if resp.status_code not in (200, 204):
         print "Couldn't send message: %s %s" % (resp.content, resp.status_code)
 
+    print 'Success? access_token: %s headers: %s' % (access_token, resp.headers)
+
+
 def send_gcm_message_for_user(user, msg=''):
     return send_gcm_message_for_channel_id(user.gcm_channel_id, msg)
