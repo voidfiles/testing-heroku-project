@@ -29,7 +29,7 @@ def send_gcm_message_for_channel_id(channel_id, msg=''):
     access_token = get_access_token()
     payload = json.dumps(dict(
         channelId=channel_id,
-        subchannelId=0,
+        subchannelId=1,
         payload=msg,
     ))
 
