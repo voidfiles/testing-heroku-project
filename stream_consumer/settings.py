@@ -60,7 +60,7 @@ ADN_STREAM_SCHEMA = {
         "channel",
     ],
     "type": "long_poll",
-    "key": "my_users_actions"
+    "key": os.environ.get('ADN_STREAM_NAME', 'my_users_actions_dev')
 }
 
 ADN_STREAM_FILTER_ID = os.environ.get('ADN_STREAM_FILTER_ID')
