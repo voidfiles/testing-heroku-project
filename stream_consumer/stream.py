@@ -26,7 +26,7 @@ class StreamListener(object):
         method_name = 'on_%s' % (message_type,)
         func = getattr(self, method_name, self.on_fallback)
 
-        func(data['data'], data['meta'])
+        func(data.get('data'), data['meta'])
 
     def on_fallback(self, data, meta):
         """Called when there is no specific method for handling an object type"""

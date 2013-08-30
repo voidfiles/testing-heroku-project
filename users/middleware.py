@@ -43,7 +43,7 @@ class ADNTokenAuthMiddleware(object):
                 if not adn_user.count():
                     token = self.fetch_user_data(access_token)
                     if token:
-                        adn_user, created = User.objects.get_or_create(adn_user_id=token['user']['id'], access_token=access_token, defaults={
+                        adn_user, created = User.objects.get_or_create(adn_user_id=int(token['user']['id']), defaults={
                             'access_token': access_token,
                             'extra': {
                                 'raw_user_object': token['user']
