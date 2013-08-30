@@ -29,7 +29,7 @@ class NotifcationStreamListener(StreamListener):
             'id': data.get('id'),
         })
 
-        user_ids = map(int, meta.get('subscribed_user_ids', [3]))
+        user_ids = map(int, meta.get('subscribed_user_ids', []))
         print 'Sending a message: %s to users: %s' % (notification, user_ids)
         users = User.objects.filter(adn_user_id__in=user_ids)
 
