@@ -62,6 +62,26 @@ def set_channel_id_for_user(request):
 
 
 @api_call()
+def update_notification_prefs(request):
+    prefs = request.POST.get('prefs')
+    if not prefs:
+        raise ApiError('Method requires prefs params')
+
+    prefs = prefs.split(',')
+    if not prefs:
+        raise ApiError('Prefs paramaters seems to be malformed')
+
+    prefs = {pref: True for pref in prefs}
+    request.adn_user.extra['notifications'] = prefs
+    request.adn_user.save()
+
+    return {
+        'adn_user_id': request.adn_user.adn_user_id,
+        'prefs': prefs,
+    }
+
+
+@api_call()
 def send_message_for_user(request):
     message = request.POST.get('message')
     if not message:

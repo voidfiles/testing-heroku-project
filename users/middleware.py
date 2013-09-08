@@ -17,6 +17,7 @@ class ADNTokenAuthMiddleware(object):
         }
 
         resp = requests.get('https://alpha-api.app.net/stream/0/token', headers=headers)
+
         if resp.status_code == 200:
             token = json.loads(resp.content)
             print 'Comparing %s to %s' % (token['data'].get('app', {}).get('client_id'), settings.ADN_CLIENT_ID)

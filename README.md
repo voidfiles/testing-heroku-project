@@ -109,6 +109,21 @@ GCM_CLIENT_SECRET=
 GCM_REFRESH_TOKEN=
 ```
 
+Once you have finished creating your .env file you will want to make sure those variables get pushed to heroku. To make your life easier we are using a config plugin.
+
+```sh
+>>> heroku plugins:install git://github.com/ddollar/heroku-config.git
+heroku-config installed
+```
+
+Now you can push whats in your .env file to your heroku enviroment
+
+**Note this will overwrite variables if they are already defined in your Heroku enviroment**
+
+```sh
+>>> heroku config:push
+```
+
 ## Running In Dev Mode
 
 ```

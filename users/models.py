@@ -28,4 +28,7 @@ class User(models.Model):
         if pytz.UTC.localize(datetime.now() - timedelta(minutes=60)) > self.updated:
             return True
         return False
-        
+
+    @property
+    def notifications(self):
+        return self.extra.get('notifications', {});
