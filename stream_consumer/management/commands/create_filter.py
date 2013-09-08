@@ -30,7 +30,7 @@ class Command(BaseCommand):
         else:
             resp = adn_api.post_json('/filters', data=settings.ADN_FILTER_SCHEMA)
 
-        print resp.json()
+        # print resp.json()
 
         if resp.status_code != 200:
             raise CommandError('Updating or creating filter failed: %s' % resp.content)
