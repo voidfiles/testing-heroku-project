@@ -1,6 +1,7 @@
 import json
 import logging
 
+from django.conf import settings
 from django.http import HttpResponse
 
 from notifications.google_gcm import send_gcm_message_for_user
@@ -71,7 +72,7 @@ def update_notification_prefs(request):
     if not prefs:
         raise ApiError('Prefs paramaters seems to be malformed')
 
-    prefs = {pref: True for pref in prefs}
+    prefs = {pref: True for pref in prefs if pref in settings.VALID_MESSAGE_PREFERENCES}
     request.adn_user.extra['notifications'] = prefs
     request.adn_user.save()
 

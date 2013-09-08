@@ -70,7 +70,14 @@ GCM_CLIENT_ID = os.environ.get('GCM_CLIENT_ID')
 GCM_CLIENT_SECRET = os.environ.get('GCM_CLIENT_SECRET')
 GCM_REFRESH_TOKEN = os.environ.get('GCM_REFRESH_TOKEN')
 
-
+VALID_MESSAGE_PREFERENCES = [
+    'pm',
+    'alert',
+    'mention',
+    'repost',
+    'star',
+    'user_follow',
+] 
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

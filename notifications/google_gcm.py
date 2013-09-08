@@ -44,5 +44,9 @@ def send_gcm_message_for_channel_id(channel_id, msg=''):
     print 'Success? access_token: %s headers: %s payload: %s' % (access_token, resp.headers, payload)
 
 
-def send_gcm_message_for_user(user, msg=''):
-    return send_gcm_message_for_channel_id(user.gcm_channel_id, msg)
+def send_gcm_message_for_user(user, msg):
+    if msg['type'] not in user.extra['notifications'].keys():
+        print 'User: %s has declined to receive notifications of type: %s' % (user.adn_user_id, msg['type']) 
+        return
+
+    return send_gcm_message_for_channel_id(user.gcm_channel_id, json.dumps(msg))
